@@ -18,6 +18,14 @@
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>com.yu</groupId>
+            <artifactId>Yapi-client-sdk</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.mybatis.generator/mybatis-generator-core -->
         <dependency>
             <groupId>org.mybatis.generator</groupId>

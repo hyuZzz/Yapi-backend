@@ -37,6 +37,11 @@ public class InterfaceInfo implements Serializable {
     private String description;
 
     /**
+     * 请求参数
+     */
+    private String requestParams;
+
+    /**
      * 请求头
      */
     private String requestHeader;
@@ -70,6 +75,8 @@ public class InterfaceInfo implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+
 
     /**
      * 是否删除(0-未删, 1-已删)

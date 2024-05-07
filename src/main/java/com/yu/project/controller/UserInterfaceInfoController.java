@@ -2,7 +2,6 @@ package com.yu.project.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
 import com.yu.project.annotation.AuthCheck;
 import com.yu.project.common.*;
 import com.yu.project.constant.CommonConstant;
@@ -11,12 +10,11 @@ import com.yu.project.exception.BusinessException;
 import com.yu.project.model.dto.userinterfaceinfo.UserInterfaceInfoAddRequest;
 import com.yu.project.model.dto.userinterfaceinfo.UserInterfaceInfoQueryRequest;
 import com.yu.project.model.dto.userinterfaceinfo.UserInterfaceInfoUpdateRequest;
-import com.yu.project.model.entity.UserInterfaceInfo;
-import com.yu.project.model.entity.User;
-
 import com.yu.project.service.UserInterfaceInfoService;
 import com.yu.project.service.UserService;
-import com.yu.yapiclientsdk.client.YApiClient;
+import com.yu.yapicommon.model.entity.User;
+import com.yu.yapicommon.model.entity.UserInterfaceInfo;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
 
 /**
  * 接口管理
@@ -37,7 +36,7 @@ import java.util.List;
 public class UserInterfaceInfoController {
 
     @Resource
-    private UserInterfaceInfoService userUserInterfaceInfoService;
+    private UserInterfaceInfoService userInterfaceInfoService;
 
     @Resource
     private UserService userService;
@@ -48,29 +47,30 @@ public class UserInterfaceInfoController {
     /**
      * 创建
      *
-     * @param userUserInterfaceInfoAddRequest
+     * @param userInterfaceInfoAddRequest
      * @param request
      * @return
      */
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUserInterfaceInfo(@RequestBody UserInterfaceInfoAddRequest userUserInterfaceInfoAddRequest, HttpServletRequest request) {
-        if (userUserInterfaceInfoAddRequest == null) {
+    public BaseResponse<Long> addUserInterfaceInfo(@RequestBody UserInterfaceInfoAddRequest userInterfaceInfoAddRequest, HttpServletRequest request) {
+        if (userInterfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        UserInterfaceInfo userUserInterfaceInfo = new UserInterfaceInfo();
-        BeanUtils.copyProperties(userUserInterfaceInfoAddRequest, userUserInterfaceInfo);
+        UserInterfaceInfo userInterfaceInfo = new UserInterfaceInfo();
+        BeanUtils.copyProperties(userInterfaceInfoAddRequest, userInterfaceInfo);
         // 校验
-        userUserInterfaceInfoService.validUserInterfaceInfo(userUserInterfaceInfo, true);
+        userInterfaceInfoService.validUserInterfaceInfo(userInterfaceInfo, true);
         User loginUser = userService.getLoginUser(request);
-        userUserInterfaceInfo.setUserId(loginUser.getId());
-        boolean result = userUserInterfaceInfoService.save(userUserInterfaceInfo);
+        userInterfaceInfo.setUserId(loginUser.getId());
+        boolean result = userInterfaceInfoService.save(userInterfaceInfo);
         if (!result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
         }
-        long newUserInterfaceInfoId = userUserInterfaceInfo.getId();
+        long newUserInterfaceInfoId = userInterfaceInfo.getId();
         return ResultUtils.success(newUserInterfaceInfoId);
     }
+
 
     /**
      * 删除
@@ -88,7 +88,7 @@ public class UserInterfaceInfoController {
         User user = userService.getLoginUser(request);
         long id = deleteRequest.getId();
         // 判断是否存在
-        UserInterfaceInfo oldUserInterfaceInfo = userUserInterfaceInfoService.getById(id);
+        UserInterfaceInfo oldUserInterfaceInfo = userInterfaceInfoService.getById(id);
         if (oldUserInterfaceInfo == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
@@ -96,7 +96,7 @@ public class UserInterfaceInfoController {
         if (!oldUserInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        boolean b = userUserInterfaceInfoService.removeById(id);
+        boolean b = userInterfaceInfoService.removeById(id);
         return ResultUtils.success(b);
     }
 
@@ -117,11 +117,11 @@ public class UserInterfaceInfoController {
         UserInterfaceInfo userUserInterfaceInfo = new UserInterfaceInfo();
         BeanUtils.copyProperties(userUserInterfaceInfoUpdateRequest, userUserInterfaceInfo);
         // 参数校验
-        userUserInterfaceInfoService.validUserInterfaceInfo(userUserInterfaceInfo, false);
+        userInterfaceInfoService.validUserInterfaceInfo(userUserInterfaceInfo, false);
         User user = userService.getLoginUser(request);
         long id = userUserInterfaceInfoUpdateRequest.getId();
         // 判断是否存在
-        UserInterfaceInfo oldUserInterfaceInfo = userUserInterfaceInfoService.getById(id);
+        UserInterfaceInfo oldUserInterfaceInfo = userInterfaceInfoService.getById(id);
         if (oldUserInterfaceInfo == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
@@ -129,7 +129,7 @@ public class UserInterfaceInfoController {
         if (!oldUserInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        boolean result = userUserInterfaceInfoService.updateById(userUserInterfaceInfo);
+        boolean result = userInterfaceInfoService.updateById(userUserInterfaceInfo);
         return ResultUtils.success(result);
     }
 
@@ -146,7 +146,7 @@ public class UserInterfaceInfoController {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        UserInterfaceInfo userUserInterfaceInfo = userUserInterfaceInfoService.getById(id);
+        UserInterfaceInfo userUserInterfaceInfo = userInterfaceInfoService.getById(id);
         return ResultUtils.success(userUserInterfaceInfo);
     }
 
@@ -165,7 +165,7 @@ public class UserInterfaceInfoController {
             BeanUtils.copyProperties(userUserInterfaceInfoQueryRequest, userUserInterfaceInfoQuery);
         }
         QueryWrapper<UserInterfaceInfo> queryWrapper = new QueryWrapper<>(userUserInterfaceInfoQuery);
-        List<UserInterfaceInfo> userUserInterfaceInfoList = userUserInterfaceInfoService.list(queryWrapper);
+        List<UserInterfaceInfo> userUserInterfaceInfoList = userInterfaceInfoService.list(queryWrapper);
         return ResultUtils.success(userUserInterfaceInfoList);
     }
 
@@ -197,7 +197,7 @@ public class UserInterfaceInfoController {
 
         queryWrapper.orderBy(StringUtils.isNotBlank(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
-        Page<UserInterfaceInfo> userUserInterfaceInfoPage = userUserInterfaceInfoService.page(new Page<>(current, size), queryWrapper);
+        Page<UserInterfaceInfo> userUserInterfaceInfoPage = userInterfaceInfoService.page(new Page<>(current, size), queryWrapper);
         return ResultUtils.success(userUserInterfaceInfoPage);
     }
 

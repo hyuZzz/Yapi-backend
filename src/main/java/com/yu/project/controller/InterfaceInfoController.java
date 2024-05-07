@@ -7,7 +7,7 @@ import com.sun.jmx.snmp.daemon.CommunicatorServer;
 import com.yu.project.common.*;
 import com.yu.project.model.dto.interfaceInfo.InterfaceInfoUpdateRequest;
 import com.yu.project.annotation.AuthCheck;
-import com.yu.project.common.*;
+
 import com.yu.project.constant.CommonConstant;
 import com.yu.project.exception.BusinessException;
 
@@ -15,13 +15,14 @@ import com.yu.project.model.dto.interfaceInfo.InterfaceInfoAddRequest;
 import com.yu.project.model.dto.interfaceInfo.InterfaceInfoQueryRequest;
 import com.yu.project.model.dto.interfaceInfo.InterfaceInfoInvokeRequest;
 
-import com.yu.project.model.entity.InterfaceInfo;
-import com.yu.project.model.entity.User;
-
 import com.yu.project.model.enums.InterfaceInfoStatusEnum;
 import com.yu.project.service.InterfaceInfoService;
 import com.yu.project.service.UserService;
 import com.yu.yapiclientsdk.client.YApiClient;
+
+import com.yu.yapicommon.model.entity.InterfaceInfo;
+import com.yu.yapicommon.model.entity.User;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -63,11 +64,12 @@ public class InterfaceInfoController {
         if (interfaceInfoAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        InterfaceInfo interfaceInfo = new InterfaceInfo();
+        InterfaceInfo interfaceInfo =new InterfaceInfo();
         BeanUtils.copyProperties(interfaceInfoAddRequest, interfaceInfo);
         // 校验
         interfaceInfoService.validInterfaceInfo(interfaceInfo, true);
         User loginUser = userService.getLoginUser(request);
+
         interfaceInfo.setUserId(loginUser.getId());
         boolean result = interfaceInfoService.save(interfaceInfo);
         if (!result) {

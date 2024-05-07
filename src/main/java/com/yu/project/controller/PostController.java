@@ -13,7 +13,9 @@ import com.yu.project.common.ResultUtils;
 import com.yu.project.constant.CommonConstant;
 import com.yu.project.exception.BusinessException;
 import com.yu.project.model.entity.Post;
-import com.yu.project.model.entity.User;
+
+import com.yu.yapicommon.model.entity.User;
+
 import com.yu.project.service.PostService;
 import com.yu.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;

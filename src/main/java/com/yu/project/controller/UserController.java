@@ -12,7 +12,7 @@ import com.yu.project.common.ResultUtils;
 import com.yu.project.exception.BusinessException;
 import com.yu.project.model.dto.*;
 import com.yu.project.model.dto.user.*;
-import com.yu.project.model.entity.User;
+import com.yu.yapicommon.model.entity.User;
 import com.yu.project.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

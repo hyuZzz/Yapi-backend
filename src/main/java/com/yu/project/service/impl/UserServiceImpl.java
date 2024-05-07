@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yu.project.common.ErrorCode;
 import com.yu.project.exception.BusinessException;
 import com.yu.project.mapper.UserMapper;
-import com.yu.project.model.entity.User;
+
+import com.yu.yapicommon.model.entity.User;
+
 import com.yu.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;

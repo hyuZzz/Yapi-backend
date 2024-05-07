@@ -2,7 +2,7 @@ package com.yu.project.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yu.project.mapper.InterfaceInfoMapper;
-import com.yu.project.model.entity.InterfaceInfo;
+import com.yu.yapicommon.model.entity.InterfaceInfo;
 import com.yu.project.common.ErrorCode;
 import com.yu.project.exception.BusinessException;
 //import com.yu.project.model.enums.InterfaceInfoGenderEnum;
